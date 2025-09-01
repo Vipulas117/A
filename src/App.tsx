@@ -12,6 +12,7 @@ import { LessonPlayer } from './components/LessonPlayer';
 import { LoadingScreen } from './components/LoadingScreen';
 import { ErrorScreen } from './components/ErrorScreen';
 import { useChatSessions } from './hooks/useChatSessions';
+import { useFileUpload } from './hooks/useFileUpload';
 import { useGemini } from './hooks/useGemini';
 import { ClassLevel, Subject, GlobalStyle, LessonContent } from './types';
 
@@ -46,6 +47,8 @@ function App() {
   } = useChatSessions();
 
   const { generateLesson, isLoading, error, clearError } = useGemini();
+
+  const { handleFileUpload } = useFileUpload();
 
   // Navigation handlers
   const handleNewChat = () => {
@@ -327,7 +330,7 @@ function App() {
           {currentStep === 'upload' && (
             <UploadArea
               onBack={handleBack}
-              onAnalyze={handleUploadAnalyze}
+              onFileUpload={handleFileUpload}
               selectedClass={selectedClass}
               selectedSubject={selectedSubject}
             />
