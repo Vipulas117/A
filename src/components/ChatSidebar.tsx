@@ -49,9 +49,11 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         className={`fixed top-0 left-0 h-full bg-white shadow-xl z-50 w-80 transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:relative lg:translate-x-0 lg:shadow-none lg:border-r lg:border-gray-200`}
+        role="navigation"
+        aria-label="Chat history and session navigation"
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+        <header className="flex items-center justify-between p-4 border-b border-gray-200" role="banner">
           <div className="flex items-center space-x-3">
             <img 
               src="/Logo.jpg" 
@@ -66,58 +68,63 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           <button
             onClick={onToggle}
             className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label="Close chat history sidebar"
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>
-        </div>
+        </header>
 
         {/* Sessions List */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <main className="flex-1 overflow-y-auto p-4 space-y-3" role="main">
           {sessions.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
+            <div className="text-center text-gray-500 py-8" role="status" aria-live="polite">
               <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>No chat history yet</p>
               <p className="text-sm">Start a new lesson to begin!</p>
             </div>
           ) : (
-            sessions.map((session) => (
-              <motion.button
-                key={session.id}
-                onClick={() => onSelectSession(session.id)}
-                className={`w-full text-left p-3 rounded-lg border transition-all hover:shadow-md ${
-                  currentSessionId === session.id
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0">
-                    <BookOpen className="w-5 h-5 text-blue-600 mt-1" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 truncate">
-                      {session.title}
-                    </h4>
-                    {session.classLevel && session.subject && (
-                      <p className="text-sm text-gray-500 truncate">
-                        {session.classLevel.replace('class-', 'Class ')} • {session.subject}
-                      </p>
-                    )}
-                    <div className="flex items-center mt-1 text-xs text-gray-400">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {formatTimeAgo(session.timestamp)}
+            <nav role="navigation" aria-label="Chat sessions">
+              {sessions.map((session) => (
+                <motion.button
+                  key={session.id}
+                  onClick={() => onSelectSession(session.id)}
+                  className={`w-full text-left p-3 rounded-lg border transition-all hover:shadow-md ${
+                    currentSessionId === session.id
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  aria-label={`Open session: ${session.title}`}
+                  aria-current={currentSessionId === session.id ? 'page' : undefined}
+                >
+                  <div className="flex items-start space-x-3">
+                    <div className="flex-shrink-0">
+                      <BookOpen className="w-5 h-5 text-blue-600 mt-1" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900 truncate">
+                        {session.title}
+                      </h4>
+                      {session.classLevel && session.subject && (
+                        <p className="text-sm text-gray-500 truncate">
+                          {session.classLevel.replace('class-', 'Class ')} • {session.subject}
+                        </p>
+                      )}
+                      <div className="flex items-center mt-1 text-xs text-gray-400">
+                        <Clock className="w-3 h-3 mr-1" />
+                        {formatTimeAgo(session.timestamp)}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.button>
-            ))
+                </motion.button>
+              ))}
+            </nav>
           )}
-        </div>
+        </main>
 
         {/* Footer */}
-        <div className="p-4 border-t border-gray-200">
+        <footer className="p-4 border-t border-gray-200" role="contentinfo">
           <div className="text-center">
             <img 
               src="/Logo.jpg" 
@@ -130,7 +137,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
               Made for Indian Teachers
             </p>
           </div>
-        </div>
+        </footer>
       </motion.div>
     </>
   );

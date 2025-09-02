@@ -45,7 +45,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200">
+      <header className="bg-white shadow-sm border-b border-gray-200" role="banner">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Title */}
@@ -53,6 +53,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               <button
                 onClick={onToggleHistory}
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label="Open chat history sidebar"
               >
                 <Menu className="w-6 h-6 text-gray-600" />
               </button>
@@ -75,6 +76,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-sky-600 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              aria-label="Start a new lesson chat"
             >
               <MessageSquarePlus className="w-5 h-5" />
               <span>New Chat</span>
@@ -84,9 +86,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" role="main">
         {/* Welcome Section */}
-        <div className="text-center mb-12">
+        <section className="text-center mb-12" role="region" aria-labelledby="welcome-heading">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -97,7 +99,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
               alt="ASman Learning Logo" 
               className="w-24 h-24 rounded-full object-cover shadow-lg mx-auto mb-6"
             />
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h2 id="welcome-heading" className="text-4xl font-bold text-gray-900 mb-4">
               Welcome to ASman Learning
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
@@ -105,10 +107,11 @@ export const Dashboard: React.FC<DashboardProps> = ({
               Create engaging lessons, analyze content, and inspire students with global teaching methods.
             </p>
           </motion.div>
-        </div>
+        </section>
 
         {/* Action Cards */}
-        <div className="grid md:grid-cols-3 gap-8 mb-12">
+        <section className="grid md:grid-cols-3 gap-8 mb-12" role="region" aria-labelledby="actions-heading">
+          <h2 id="actions-heading" className="sr-only">Main Actions</h2>
           {actionCards.map((card, index) => (
             <motion.div
               key={card.title}
@@ -118,6 +121,15 @@ export const Dashboard: React.FC<DashboardProps> = ({
               whileHover={{ y: -8 }}
               className="group cursor-pointer"
               onClick={card.onClick}
+              role="button"
+              tabIndex={0}
+              aria-label={`${card.title}: ${card.description}`}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  card.onClick();
+                }
+              }}
             >
               <div className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden">
                 <div className={`h-32 bg-gradient-to-br ${card.color} relative`}>
@@ -137,57 +149,62 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
             </motion.div>
           ))}
-        </div>
+        </section>
 
         {/* Quick Stats */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="bg-white rounded-2xl shadow-lg p-8"
-        >
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">10</div>
-              <div className="text-gray-600">Class Levels</div>
+        <section role="region" aria-labelledby="stats-heading">
+          <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="bg-white rounded-2xl shadow-lg p-8"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="text-3xl font-bold text-blue-600 mb-2" aria-label="10 class levels available">10</div>
+                <div className="text-gray-600">Class Levels</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-green-600 mb-2" aria-label="6 core subjects available">6</div>
+                <div className="text-gray-600">Core Subjects</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-purple-600 mb-2" aria-label="4 teaching styles available">4</div>
+                <div className="text-gray-600">Teaching Styles</div>
+              </div>
+              <div>
+                <div className="text-3xl font-bold text-orange-600 mb-2" aria-label="Unlimited lesson possibilities">∞</div>
+                <div className="text-gray-600">Lesson Possibilities</div>
+              </div>
             </div>
-            <div>
-              <div className="text-3xl font-bold text-green-600 mb-2">6</div>
-              <div className="text-gray-600">Core Subjects</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-600 mb-2">4</div>
-              <div className="text-gray-600">Teaching Styles</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-orange-600 mb-2">∞</div>
-              <div className="text-gray-600">Lesson Possibilities</div>
-            </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </section>
 
         {/* Getting Started */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          className="mt-12 text-center"
-        >
-          <div className="bg-gradient-to-r from-blue-600 to-sky-600 rounded-2xl p-8 text-white">
-            <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
-            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
-              Click "New Chat" to begin creating your first AI-powered lesson, or explore our action cards above to discover all the amazing features ASman has to offer.
-            </p>
-            <motion.button
-              onClick={onNewChat}
-              className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Start Your First Lesson
-            </motion.button>
-          </div>
-        </motion.div>
+        <section className="mt-12 text-center" role="region" aria-labelledby="getting-started-heading">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <div className="bg-gradient-to-r from-blue-600 to-sky-600 rounded-2xl p-8 text-white">
+              <h3 id="getting-started-heading" className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
+              <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+                Click "New Chat" to begin creating your first AI-powered lesson, or explore our action cards above to discover all the amazing features ASman has to offer.
+              </p>
+              <motion.button
+                onClick={onNewChat}
+                className="bg-white text-blue-600 px-8 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Start creating your first lesson"
+              >
+                Start Your First Lesson
+              </motion.button>
+            </div>
+          </motion.div>
+        </section>
       </main>
     </div>
   );

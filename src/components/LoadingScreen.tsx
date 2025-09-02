@@ -23,7 +23,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 flex items-center justify-center p-4" role="main">
       <div className="text-center max-w-md mx-auto">
         {/* ASman Character */}
         <motion.div
@@ -37,22 +37,26 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
             repeat: Infinity,
             ease: "easeInOut"
           }}
+          aria-hidden="true"
         >
           <ASmanCharacter size="large" />
         </motion.div>
 
         {/* Main Message */}
-        <motion.h2
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-2xl font-bold text-gray-900 mb-4"
-        >
-          {isGlobalVersion ? "🌍 Creating Global Version..." : message}
-        </motion.h2>
+        <header role="banner">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-2xl font-bold text-gray-900 mb-4"
+          >
+            {isGlobalVersion ? "🌍 Creating Global Version..." : message}
+          </motion.h1>
+        </header>
 
         {/* Loading Steps */}
-        <div className="space-y-4 mb-8">
+        <section className="space-y-4 mb-8" role="status" aria-live="polite" aria-labelledby="loading-steps-heading">
+          <h2 id="loading-steps-heading" className="sr-only">Lesson Creation Progress</h2>
           {loadingSteps.map((step, index) => (
             <motion.div
               key={index}
@@ -71,16 +75,17 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
                   repeat: Infinity,
                   delay: index * 0.3
                 }}
+                aria-hidden="true"
               >
                 <step.icon className="w-5 h-5 text-blue-600" />
               </motion.div>
               <span>{step.text}</span>
             </motion.div>
           ))}
-        </div>
+        </section>
 
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+        <div className="w-full bg-gray-200 rounded-full h-2 mb-6" role="progressbar" aria-label="Lesson generation progress" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100}>
           <motion.div
             className="bg-gradient-to-r from-blue-600 to-sky-600 h-2 rounded-full"
             initial={{ width: "0%" }}
@@ -90,14 +95,16 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </div>
 
         {/* Encouragement */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-gray-500"
-        >
-          Creating an amazing learning experience for your students...
-        </motion.p>
+        <footer role="contentinfo">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.8 }}
+            className="text-gray-500"
+          >
+            Creating an amazing learning experience for your students...
+          </motion.p>
+        </footer>
       </div>
     </div>
   );

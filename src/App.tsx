@@ -250,18 +250,20 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden" role="application" aria-label="ASman Learning - AI Teaching Assistant">
       {/* Chat Sidebar */}
-      <ChatSidebar
-        isOpen={isHistoryOpen}
-        sessions={sessions}
-        currentSessionId={currentSession?.id}
-        onToggle={toggleHistory}
-        onSelectSession={handleSelectSession}
-      />
+      <aside role="complementary" aria-label="Chat History and Session Management">
+        <ChatSidebar
+          isOpen={isHistoryOpen}
+          sessions={sessions}
+          currentSessionId={currentSession?.id}
+          onToggle={toggleHistory}
+          onSelectSession={handleSelectSession}
+        />
+      </aside>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      <main role="main" className="flex-1 overflow-auto" aria-label="Main Application Content">
         <AnimatePresence mode="wait">
           {currentStep === 'dashboard' && (
             <Dashboard
@@ -298,12 +300,13 @@ function App() {
           )}
 
           {currentStep === 'style-selection' && (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+            <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="region" aria-labelledby="style-selection-heading">
               <div className="max-w-4xl mx-auto">
                 <div className="flex items-center mb-8">
                   <button
                     onClick={handleBack}
                     className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+                    aria-label="Go back to topic input"
                   >
                     <ArrowLeft className="w-5 h-5" />
                     <span>Back</span>
@@ -311,7 +314,7 @@ function App() {
                 </div>
                 
                 <div className="text-center mb-12">
-                  <h2 className="text-4xl font-bold text-gray-900 mb-4">
+                  <h2 id="style-selection-heading" className="text-4xl font-bold text-gray-900 mb-4">
                     Choose Teaching Style
                   </h2>
                   <p className="text-xl text-gray-600">
@@ -324,7 +327,7 @@ function App() {
                   onSelectStyle={handleStyleSelection}
                 />
               </div>
-            </div>
+            </section>
           )}
 
           {currentStep === 'upload' && (
@@ -363,7 +366,7 @@ function App() {
             />
           )}
         </AnimatePresence>
-      </div>
+      </main>
     </div>
   );
 }

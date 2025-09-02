@@ -198,13 +198,14 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
       <div className="max-w-6xl mx-auto">
         {/* Header Controls */}
-        <div className="flex items-center justify-between mb-8">
+        <header className="flex items-center justify-between mb-8" role="banner">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back to previous step"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back</span>
@@ -217,54 +218,61 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
               </span>
             </div>
           </div>
-        </div>
+        </header>
 
         {/* Professional Teacher Controls */}
-        <TeacherControls
-          isPlaying={isPlaying}
-          isHindi={isHindi}
-          isAudioEnabled={isAudioEnabled}
-          speechRate={speechRate}
-          globalStyle={globalStyle}
-          onPlayPause={togglePlayPause}
-          onLanguageToggle={() => setIsHindi(!isHindi)}
-          onAudioToggle={() => setIsAudioEnabled(!isAudioEnabled)}
-          onSpeedChange={setSpeechRate}
-          onStyleToggle={() => setShowStyleSelector(!showStyleSelector)}
-          lessonData={lessonContent.lessonData}
-        />
+        <section role="region" aria-labelledby="teacher-controls-heading">
+          <h2 id="teacher-controls-heading" className="sr-only">Teacher Controls</h2>
+          <TeacherControls
+            isPlaying={isPlaying}
+            isHindi={isHindi}
+            isAudioEnabled={isAudioEnabled}
+            speechRate={speechRate}
+            globalStyle={globalStyle}
+            onPlayPause={togglePlayPause}
+            onLanguageToggle={() => setIsHindi(!isHindi)}
+            onAudioToggle={() => setIsAudioEnabled(!isAudioEnabled)}
+            onSpeedChange={setSpeechRate}
+            onStyleToggle={() => setShowStyleSelector(!showStyleSelector)}
+            lessonData={lessonContent.lessonData}
+          />
+        </section>
 
         {/* Global Style Selector */}
         <AnimatePresence>
           {showStyleSelector && (
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -20, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mb-8"
-            >
-              <GlobalStyleSelector
-                selectedStyle={globalStyle}
-                onSelectStyle={(style) => {
-                  onStyleChange(style);
-                  setShowStyleSelector(false);
-                }}
-                showTitle={false}
-              />
-            </motion.div>
+            <section role="region" aria-labelledby="style-selector-heading">
+              <h2 id="style-selector-heading" className="sr-only">Teaching Style Selection</h2>
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -20, opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="mb-8"
+              >
+                <GlobalStyleSelector
+                  selectedStyle={globalStyle}
+                  onSelectStyle={(style) => {
+                    onStyleChange(style);
+                    setShowStyleSelector(false);
+                  }}
+                  showTitle={false}
+                />
+              </motion.div>
+            </section>
           )}
         </AnimatePresence>
 
         {/* Main Lesson Content */}
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Lesson Content - Takes 2 columns */}
-          <div className="lg:col-span-2">
+          <section className="lg:col-span-2" role="region" aria-labelledby="lesson-content-heading">
+            <h2 id="lesson-content-heading" className="sr-only">Lesson Content</h2>
             {formatLessonContent(lessonContent.explanation)}
-          </div>
+          </section>
 
           {/* Interactive Questions - Takes 1 column */}
-          <div className="lg:col-span-1">
+          <aside className="lg:col-span-1" role="complementary" aria-labelledby="questions-heading">
             <motion.div
               initial={{ x: 20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -272,10 +280,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
               className="bg-white rounded-2xl shadow-lg p-6 sticky top-4"
             >
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-bold text-gray-900">
+                <h3 id="questions-heading" className="text-xl font-bold text-gray-900">
                   Interactive Questions
                 </h3>
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-gray-500" aria-live="polite">
                   {currentQuestionIndex + 1} of {lessonContent.questions.length}
                 </div>
               </div>
@@ -288,18 +296,21 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   exit={{ x: -20, opacity: 0 }}
                   transition={{ duration: 0.3 }}
                   className="space-y-6"
+                  role="group"
+                  aria-labelledby={`question-${currentQuestionIndex}-heading`}
                 >
                   {/* Question */}
                   <div className="p-4 bg-blue-50 rounded-xl">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className="text-lg font-semibold text-blue-900">
+                      <h4 id={`question-${currentQuestionIndex}-heading`} className="text-lg font-semibold text-blue-900">
                         Question {currentQuestionIndex + 1}
                       </h4>
                       <button
                         onClick={() => speakSection(currentQuestion.question)}
                         className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                        aria-label={`Read question ${currentQuestionIndex + 1} aloud`}
                       >
-                        <Volume2 className="w-4 h-4" />
+                        <Volume2 className="w-4 h-4" aria-hidden="true" />
                       </button>
                     </div>
                     <p className="text-blue-800">
@@ -308,7 +319,8 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   </div>
 
                   {/* Options */}
-                  <div className="space-y-3">
+                  <fieldset className="space-y-3">
+                    <legend className="sr-only">Answer options for question {currentQuestionIndex + 1}</legend>
                     {currentQuestion.options.map((option, index) => {
                       const isSelected = selectedAnswers[currentQuestionIndex] === index;
                       const isCorrect = index === currentQuestion.correct;
@@ -332,19 +344,21 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                           }`}
                           whileHover={!showResult ? { scale: 1.02 } : {}}
                           whileTap={!showResult ? { scale: 0.98 } : {}}
+                          aria-label={`Option ${index + 1}: ${option}${showResult ? (isCorrect ? ' - Correct answer' : isSelected ? ' - Incorrect answer' : '') : ''}`}
+                          aria-pressed={isSelected}
                         >
                           <div className="flex items-center space-x-3">
                             <div className="flex-shrink-0">
                               {showResult ? (
                                 isCorrect ? (
-                                  <CheckCircle className="w-6 h-6 text-green-600" />
+                                  <CheckCircle className="w-6 h-6 text-green-600" aria-hidden="true" />
                                 ) : isSelected ? (
-                                  <Circle className="w-6 h-6 text-red-600" />
+                                  <Circle className="w-6 h-6 text-red-600" aria-hidden="true" />
                                 ) : (
-                                  <Circle className="w-6 h-6 text-gray-400" />
+                                  <Circle className="w-6 h-6 text-gray-400" aria-hidden="true" />
                                 )
                               ) : (
-                                <Circle className={`w-6 h-6 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} />
+                                <Circle className={`w-6 h-6 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`} aria-hidden="true" />
                               )}
                             </div>
                             <span className={`${
@@ -360,7 +374,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                         </motion.button>
                       );
                     })}
-                  </div>
+                  </fieldset>
 
                   {/* Answer Explanation */}
                   {selectedAnswers[currentQuestionIndex] !== undefined && currentQuestion.explanation && (
@@ -368,8 +382,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                       initial={{ y: 10, opacity: 0 }}
                       animate={{ y: 0, opacity: 1 }}
                       className="p-4 bg-yellow-50 border border-yellow-200 rounded-xl"
+                      role="region"
+                      aria-labelledby={`explanation-${currentQuestionIndex}-heading`}
                     >
-                      <h5 className="font-semibold text-yellow-900 mb-2">💡 Explanation</h5>
+                      <h5 id={`explanation-${currentQuestionIndex}-heading`} className="font-semibold text-yellow-900 mb-2">💡 Explanation</h5>
                       <p className="text-yellow-800 text-sm">
                         {getTranslatedText(currentQuestion.explanation)}
                       </p>
@@ -377,17 +393,18 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   )}
 
                   {/* Navigation */}
-                  <div className="flex items-center justify-between pt-6">
+                  <nav className="flex items-center justify-between pt-6" role="navigation" aria-label="Question navigation">
                     <button
                       onClick={prevQuestion}
                       disabled={currentQuestionIndex === 0}
                       className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:text-blue-800 disabled:text-gray-400 transition-colors"
+                      aria-label="Go to previous question"
                     >
-                      <SkipBack className="w-4 h-4" />
+                      <SkipBack className="w-4 h-4" aria-hidden="true" />
                       <span>Previous</span>
                     </button>
                     
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-2" role="group" aria-label="Question progress indicators">
                       {lessonContent.questions.map((_, index) => (
                         <div
                           key={index}
@@ -398,6 +415,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                               ? 'bg-green-500'
                               : 'bg-gray-300'
                           }`}
+                          aria-label={`Question ${index + 1}: ${
+                            index === currentQuestionIndex ? 'current' : 
+                            selectedAnswers[index] !== undefined ? 'completed' : 'not started'
+                          }`}
                         />
                       ))}
                     </div>
@@ -406,95 +427,104 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                       onClick={nextQuestion}
                       disabled={currentQuestionIndex === lessonContent.questions.length - 1}
                       className="flex items-center space-x-2 px-4 py-2 text-blue-600 hover:text-blue-800 disabled:text-gray-400 transition-colors"
+                      aria-label="Go to next question"
                     >
                       <span>Next</span>
-                      <SkipForward className="w-4 h-4" />
+                      <SkipForward className="w-4 h-4" aria-hidden="true" />
                     </button>
-                  </div>
+                  </nav>
                 </motion.div>
               </AnimatePresence>
             </motion.div>
-          </div>
+          </aside>
         </div>
 
         {/* Global Version Option */}
         {!lessonContent.isGlobalVersion && onRequestGlobalVersion && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-8 text-white text-center"
-          >
-            <h3 className="text-2xl font-bold mb-4">🌍 Want More Global Perspectives?</h3>
-            <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
-              Unlock enhanced content with international examples, cross-cultural insights, 
-              and global best practices from around the world!
-            </p>
-            <motion.button
-              onClick={onRequestGlobalVersion}
-              className="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-colors"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+          <aside role="complementary" aria-labelledby="global-version-heading">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mt-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-8 text-white text-center"
             >
-              Generate Global Version
-            </motion.button>
-          </motion.div>
+              <h3 id="global-version-heading" className="text-2xl font-bold mb-4">🌍 Want More Global Perspectives?</h3>
+              <p className="text-purple-100 mb-6 max-w-2xl mx-auto">
+                Unlock enhanced content with international examples, cross-cultural insights, 
+                and global best practices from around the world!
+              </p>
+              <motion.button
+                onClick={onRequestGlobalVersion}
+                className="bg-white text-purple-600 px-8 py-3 rounded-lg font-medium hover:bg-purple-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Generate enhanced global version of this lesson"
+              >
+                Generate Global Version
+              </motion.button>
+            </motion.div>
+          </aside>
         )}
 
         {/* Global Version Indicator */}
         {lessonContent.isGlobalVersion && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-6 text-white text-center"
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <Globe className="w-6 h-6" />
-              <span className="text-lg font-semibold">Enhanced Global Version Active</span>
-            </div>
-            <p className="text-green-100 mt-2">
-              This lesson includes international perspectives and global best practices!
-            </p>
-          </motion.div>
+          <aside role="status" aria-live="polite" aria-labelledby="global-indicator-heading">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mt-8 bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-6 text-white text-center"
+            >
+              <div className="flex items-center justify-center space-x-2">
+                <Globe className="w-6 h-6" aria-hidden="true" />
+                <span id="global-indicator-heading" className="text-lg font-semibold">Enhanced Global Version Active</span>
+              </div>
+              <p className="text-green-100 mt-2">
+                This lesson includes international perspectives and global best practices!
+              </p>
+            </motion.div>
+          </aside>
         )}
 
         {/* Hindi Translations Panel */}
         {Object.keys(lessonContent.hindiTranslation).length > 0 && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="mt-8 bg-white rounded-2xl shadow-lg p-8"
-          >
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                <Languages className="w-6 h-6 text-orange-500 mr-2" />
-                Key Terms Translation
-              </h3>
-              <button
-                onClick={() => {
-                  const termsText = Object.entries(lessonContent.hindiTranslation)
-                    .map(([english, hindi]) => `${english} means ${hindi}`)
-                    .join('. ');
-                  speakSection(termsText);
-                }}
-                className="flex items-center space-x-2 bg-orange-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-700 transition-colors"
-              >
-                <Volume2 className="w-4 h-4" />
-                <span>Read Terms</span>
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              {Object.entries(lessonContent.hindiTranslation).map(([english, hindi]) => (
-                <div key={english} className="p-3 bg-orange-50 rounded-lg text-center border border-orange-200">
-                  <div className="font-medium text-gray-900 mb-1">{english}</div>
-                  <div className="text-orange-600 font-medium text-lg">{hindi}</div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
+          <aside role="complementary" aria-labelledby="translations-heading">
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              className="mt-8 bg-white rounded-2xl shadow-lg p-8"
+            >
+              <div className="flex items-center justify-between mb-6">
+                <h3 id="translations-heading" className="text-xl font-bold text-gray-900 flex items-center">
+                  <Languages className="w-6 h-6 text-orange-500 mr-2" aria-hidden="true" />
+                  Key Terms Translation
+                </h3>
+                <button
+                  onClick={() => {
+                    const termsText = Object.entries(lessonContent.hindiTranslation)
+                      .map(([english, hindi]) => `${english} means ${hindi}`)
+                      .join('. ');
+                    speakSection(termsText);
+                  }}
+                  className="flex items-center space-x-2 bg-orange-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-orange-700 transition-colors"
+                  aria-label="Read all key terms and their Hindi translations aloud"
+                >
+                  <Volume2 className="w-4 h-4" aria-hidden="true" />
+                  <span>Read Terms</span>
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" role="list" aria-label="English to Hindi translations">
+                {Object.entries(lessonContent.hindiTranslation).map(([english, hindi]) => (
+                  <div key={english} className="p-3 bg-orange-50 rounded-lg text-center border border-orange-200" role="listitem">
+                    <div className="font-medium text-gray-900 mb-1" lang="en">{english}</div>
+                    <div className="text-orange-600 font-medium text-lg" lang="hi">{hindi}</div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </aside>
         )}
       </div>
     </div>

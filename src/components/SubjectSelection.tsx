@@ -27,21 +27,22 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
   const classNumber = selectedClass.replace('class-', '');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center mb-8">
+        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back to class selection"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back to Classes</span>
           </button>
-        </div>
+        </nav>
 
         {/* Title */}
-        <div className="text-center mb-12">
+        <header className="text-center mb-12" role="banner">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -50,17 +51,18 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
             <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-sky-500 rounded-full flex items-center justify-center text-white text-2xl font-bold">
               {classNumber}
             </div>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Choose Your Subject
-            </h2>
+            </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Select a subject for Class {classNumber} to create engaging, curriculum-aligned lessons.
             </p>
           </motion.div>
-        </div>
+        </header>
 
         {/* Subject Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" role="region" aria-labelledby="subject-grid-heading">
+          <h2 id="subject-grid-heading" className="sr-only">Available Subjects for Class {classNumber}</h2>
           {SUBJECTS.map((subject, index) => {
             const IconComponent = iconMap[subject.icon as keyof typeof iconMap];
             
@@ -74,6 +76,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 whileHover={{ y: -8, scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
+                aria-label={`Select ${subject.name}: ${subject.description}`}
               >
                 {/* Subject Icon and Color */}
                 <div className={`w-16 h-16 ${subject.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
@@ -98,25 +101,26 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
               </motion.button>
             );
           })}
-        </div>
+        </section>
 
         {/* Helper Section */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="mt-12 text-center"
-        >
-          <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-2xl p-6 max-w-3xl mx-auto">
-            <h4 className="font-semibold text-orange-900 mb-2">
-              🌟 Did You Know?
-            </h4>
-            <p className="text-orange-800">
-              ASman can adapt any subject to different teaching styles from around the world. 
-              After selecting your subject, you'll be able to choose from Chinese, Japanese, American, or European teaching methodologies!
-            </p>
-          </div>
-        </motion.div>
+        <aside className="mt-12 text-center" role="complementary" aria-labelledby="did-you-know-heading">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-2xl p-6 max-w-3xl mx-auto">
+              <h4 id="did-you-know-heading" className="font-semibold text-orange-900 mb-2">
+                🌟 Did You Know?
+              </h4>
+              <p className="text-orange-800">
+                ASman can adapt any subject to different teaching styles from around the world. 
+                After selecting your subject, you'll be able to choose from Chinese, Japanese, American, or European teaching methodologies!
+              </p>
+            </div>
+          </motion.div>
+        </aside>
       </div>
     </div>
   );

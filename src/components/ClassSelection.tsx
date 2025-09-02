@@ -14,38 +14,40 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
   onBack
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex items-center mb-8">
+        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
+            aria-label="Go back to dashboard"
           >
             <ArrowLeft className="w-5 h-5" />
             <span>Back to Dashboard</span>
           </button>
-        </div>
+        </nav>
 
         {/* Title */}
-        <div className="text-center mb-12">
+        <header className="text-center mb-12" role="banner">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.6 }}
           >
             <BookOpen className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Select Your Class
-            </h2>
+            </h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Choose the class level to create age-appropriate lessons that engage and inspire your students.
             </p>
           </motion.div>
-        </div>
+        </header>
 
         {/* Class Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6" role="region" aria-labelledby="class-grid-heading">
+          <h2 id="class-grid-heading" className="sr-only">Available Class Levels</h2>
           {CLASSES.map((classInfo, index) => (
             <motion.button
               key={classInfo.id}
@@ -56,6 +58,7 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
               transition={{ duration: 0.6, delay: index * 0.05 }}
               whileHover={{ y: -8, scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
+              aria-label={`Select Class ${classInfo.number} for ages ${classInfo.ageRange}: ${classInfo.description}`}
             >
               <div className="text-center">
                 {/* Class Number */}
@@ -81,25 +84,26 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
               </div>
             </motion.button>
           ))}
-        </div>
+        </section>
 
         {/* Helper Text */}
-        <motion.div
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-center mt-12"
-        >
-          <div className="bg-blue-100 rounded-2xl p-6 max-w-2xl mx-auto">
-            <h4 className="font-semibold text-blue-900 mb-2">
-              💡 Teaching Tip
-            </h4>
-            <p className="text-blue-800">
-              ASman adapts lesson complexity automatically based on the class level you select. 
-              Each class has been calibrated for Indian curriculum standards and age-appropriate learning.
-            </p>
-          </div>
-        </motion.div>
+        <aside className="text-center mt-12" role="complementary" aria-labelledby="teaching-tip-heading">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+          >
+            <div className="bg-blue-100 rounded-2xl p-6 max-w-2xl mx-auto">
+              <h4 id="teaching-tip-heading" className="font-semibold text-blue-900 mb-2">
+                💡 Teaching Tip
+              </h4>
+              <p className="text-blue-800">
+                ASman adapts lesson complexity automatically based on the class level you select. 
+                Each class has been calibrated for Indian curriculum standards and age-appropriate learning.
+              </p>
+            </div>
+          </motion.div>
+        </aside>
       </div>
     </div>
   );
