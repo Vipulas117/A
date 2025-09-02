@@ -45,7 +45,8 @@ export const TeacherControls: React.FC<TeacherControlsProps> = ({
   lessonData
 }) => {
   return (
-    <motion.div
+    <section role="region" aria-labelledby="teacher-controls-main-heading">
+      <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6 }}
@@ -53,7 +54,7 @@ export const TeacherControls: React.FC<TeacherControlsProps> = ({
     >
       {/* Lesson Info Header */}
       {lessonData && (
-        <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200">
+        <header className="flex items-center justify-between mb-6 pb-4 border-b border-gray-200" aria-label="Current lesson information">
           <div className="flex items-center space-x-4">
             <img 
               src="/Logo.jpg" 
@@ -74,13 +75,13 @@ export const TeacherControls: React.FC<TeacherControlsProps> = ({
               </div>
             </div>
           </div>
-        </div>
+        </header>
       )}
 
       {/* Main Controls */}
-      <div className="flex items-center justify-between">
+      <main className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <h4 className="text-lg font-bold text-gray-900">Teacher Controls</h4>
+          <h3 id="teacher-controls-main-heading" className="text-lg font-bold text-gray-900">Teacher Controls</h3>
           <div className="text-sm text-gray-600">Control your lesson presentation</div>
         </div>
 
@@ -145,10 +146,10 @@ export const TeacherControls: React.FC<TeacherControlsProps> = ({
             </select>
           </div>
         </div>
-      </div>
+      </main>
 
       {/* Status Indicators */}
-      <div className="flex items-center space-x-6 mt-4 text-sm">
+      <footer className="flex items-center space-x-6 mt-4 text-sm" aria-label="Current control status">
         <div className={`flex items-center space-x-2 ${isPlaying ? 'text-green-600' : 'text-gray-500'}`}>
           <div className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-green-500' : 'bg-gray-400'}`} />
           <span>{isPlaying ? 'Lesson Active' : 'Lesson Paused'}</span>
@@ -165,7 +166,8 @@ export const TeacherControls: React.FC<TeacherControlsProps> = ({
           <Globe className="w-4 h-4" />
           <span>{globalStyle.charAt(0).toUpperCase() + globalStyle.slice(1)} Style</span>
         </div>
-      </div>
-    </motion.div>
+      </footer>
+      </motion.div>
+    </section>
   );
 };

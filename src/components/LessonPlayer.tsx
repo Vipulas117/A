@@ -198,10 +198,10 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header Controls */}
-        <header className="flex items-center justify-between mb-8" role="banner">
+        <header className="flex items-center justify-between mb-8" role="banner" aria-label="Lesson player header">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -221,7 +221,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
         </header>
 
         {/* Professional Teacher Controls */}
-        <section role="region" aria-labelledby="teacher-controls-heading">
+        <nav role="navigation" aria-labelledby="teacher-controls-heading">
           <h2 id="teacher-controls-heading" className="sr-only">Teacher Controls</h2>
           <TeacherControls
             isPlaying={isPlaying}
@@ -236,12 +236,12 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
             onStyleToggle={() => setShowStyleSelector(!showStyleSelector)}
             lessonData={lessonContent.lessonData}
           />
-        </section>
+        </nav>
 
         {/* Global Style Selector */}
         <AnimatePresence>
           {showStyleSelector && (
-            <section role="region" aria-labelledby="style-selector-heading">
+            <aside role="complementary" aria-labelledby="style-selector-heading">
               <h2 id="style-selector-heading" className="sr-only">Teaching Style Selection</h2>
               <motion.div
                 initial={{ y: 20, opacity: 0 }}
@@ -259,17 +259,17 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   showTitle={false}
                 />
               </motion.div>
-            </section>
+            </aside>
           )}
         </AnimatePresence>
 
         {/* Main Lesson Content */}
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Lesson Content - Takes 2 columns */}
-          <section className="lg:col-span-2" role="region" aria-labelledby="lesson-content-heading">
+          <main className="lg:col-span-2" aria-labelledby="lesson-content-heading">
             <h2 id="lesson-content-heading" className="sr-only">Lesson Content</h2>
             {formatLessonContent(lessonContent.explanation)}
-          </section>
+          </main>
 
           {/* Interactive Questions - Takes 1 column */}
           <aside className="lg:col-span-1" role="complementary" aria-labelledby="questions-heading">
@@ -298,6 +298,7 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                   className="space-y-6"
                   role="group"
                   aria-labelledby={`question-${currentQuestionIndex}-heading`}
+                  aria-describedby={`question-${currentQuestionIndex}-description`}
                 >
                   {/* Question */}
                   <div className="p-4 bg-blue-50 rounded-xl">
@@ -315,6 +316,9 @@ export const LessonPlayer: React.FC<LessonPlayerProps> = ({
                     </div>
                     <p className="text-blue-800">
                       {getTranslatedText(currentQuestion.question)}
+                    </p>
+                    <p id={`question-${currentQuestionIndex}-description`} className="sr-only">
+                      Question {currentQuestionIndex + 1} of {lessonContent.questions.length}. Select the correct answer from the options below.
                     </p>
                   </div>
 

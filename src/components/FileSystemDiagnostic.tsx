@@ -181,7 +181,7 @@ export const FileSystemDiagnosticComponent: React.FC<FileSystemDiagnosticProps> 
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" role="dialog" aria-labelledby="diagnostic-heading" aria-modal="true">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -189,19 +189,19 @@ export const FileSystemDiagnosticComponent: React.FC<FileSystemDiagnosticProps> 
       >
         <div className="p-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-gray-900">System Diagnostic Report</h3>
+          <header className="flex items-center justify-between mb-6" role="banner">
+            <h3 id="diagnostic-heading" className="text-xl font-bold text-gray-900">System Diagnostic Report</h3>
             <button
               onClick={onClose}
               className="text-gray-500 hover:text-gray-700 transition-colors"
             >
               ✕
             </button>
-          </div>
+          </header>
 
           {/* Diagnostic Progress */}
           {isRunning ? (
-            <div className="text-center py-8">
+            <main className="text-center py-8" role="status" aria-live="polite">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -209,9 +209,10 @@ export const FileSystemDiagnosticComponent: React.FC<FileSystemDiagnosticProps> 
               />
               <p className="text-gray-600 mb-2">Running comprehensive system diagnostic...</p>
               <p className="text-sm text-blue-600">{diagnosticStep}</p>
-            </div>
+            </main>
           ) : (
-            <div className="space-y-6">
+            <main className="space-y-6" aria-labelledby="diagnostic-results-heading">
+              <h4 id="diagnostic-results-heading" className="sr-only">Diagnostic Results</h4>
               {/* Overall Status */}
               <div className={`p-4 rounded-lg ${allSystemsGood ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'}`}>
                 <div className="flex items-center space-x-3">
@@ -298,7 +299,7 @@ export const FileSystemDiagnosticComponent: React.FC<FileSystemDiagnosticProps> 
                   Close
                 </button>
               </div>
-            </div>
+            </main>
           )}
         </div>
       </motion.div>

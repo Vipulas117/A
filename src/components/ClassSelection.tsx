@@ -14,10 +14,10 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
   onBack
 }) => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
+        <nav className="flex items-center mb-8" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -29,7 +29,7 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
         </nav>
 
         {/* Title */}
-        <header className="text-center mb-12" role="banner">
+        <header className="text-center mb-12" role="banner" aria-label="Class selection page header">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -46,7 +46,7 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
         </header>
 
         {/* Class Grid */}
-        <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6" role="region" aria-labelledby="class-grid-heading">
+        <main className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6" aria-labelledby="class-grid-heading">
           <h2 id="class-grid-heading" className="sr-only">Available Class Levels</h2>
           {CLASSES.map((classInfo, index) => (
             <motion.button
@@ -84,7 +84,7 @@ export const ClassSelection: React.FC<ClassSelectionProps> = ({
               </div>
             </motion.button>
           ))}
-        </section>
+        </main>
 
         {/* Helper Text */}
         <aside className="text-center mt-12" role="complementary" aria-labelledby="teaching-tip-heading">

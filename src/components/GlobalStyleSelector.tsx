@@ -15,14 +15,17 @@ export const GlobalStyleSelector: React.FC<GlobalStyleSelectorProps> = ({
   showTitle = true
 }) => {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-6">
+    <section className="bg-white rounded-2xl shadow-lg p-6" role="region" aria-labelledby="style-selector-main-heading">
       {showTitle && (
-        <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">
+        <header className="text-center mb-6">
+          <h3 id="style-selector-main-heading" className="text-xl font-bold text-gray-900">
           🌍 Choose Your Teaching Style
-        </h3>
+          </h3>
+        </header>
       )}
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <main className="grid grid-cols-1 md:grid-cols-2 gap-4" role="group" aria-labelledby="teaching-styles-heading">
+        <h4 id="teaching-styles-heading" className="sr-only">Available Teaching Styles</h4>
         {TEACHING_STYLES.map((style, index) => (
           <motion.button
             key={style.id}
@@ -50,15 +53,15 @@ export const GlobalStyleSelector: React.FC<GlobalStyleSelectorProps> = ({
             </p>
           </motion.button>
         ))}
-      </div>
+      </main>
       
       {showTitle && (
-        <div className="mt-6 text-center">
+        <footer className="mt-6 text-center" aria-label="Style selection help text">
           <p className="text-sm text-gray-500">
             Each style brings unique benefits. You can change styles anytime during the lesson!
           </p>
-        </div>
+        </footer>
       )}
-    </div>
+    </section>
   );
 };

@@ -23,7 +23,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 flex items-center justify-center p-4" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 flex items-center justify-center p-4">
       <div className="text-center max-w-md mx-auto">
         {/* ASman Character */}
         <motion.div
@@ -43,7 +43,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </motion.div>
 
         {/* Main Message */}
-        <header role="banner">
+        <header role="banner" aria-label="Loading screen header">
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -55,7 +55,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
         </header>
 
         {/* Loading Steps */}
-        <section className="space-y-4 mb-8" role="status" aria-live="polite" aria-labelledby="loading-steps-heading">
+        <main className="space-y-4 mb-8" role="status" aria-live="polite" aria-labelledby="loading-steps-heading">
           <h2 id="loading-steps-heading" className="sr-only">Lesson Creation Progress</h2>
           {loadingSteps.map((step, index) => (
             <motion.div
@@ -82,20 +82,22 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({
               <span>{step.text}</span>
             </motion.div>
           ))}
-        </section>
+        </main>
 
         {/* Progress Bar */}
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-6" role="progressbar" aria-label="Lesson generation progress" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100}>
+        <aside role="complementary">
+          <div className="w-full bg-gray-200 rounded-full h-2 mb-6" role="progressbar" aria-label="Lesson generation progress" aria-valuenow={50} aria-valuemin={0} aria-valuemax={100}>
           <motion.div
             className="bg-gradient-to-r from-blue-600 to-sky-600 h-2 rounded-full"
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
             transition={{ duration: 3, repeat: Infinity }}
           />
-        </div>
+          </div>
+        </aside>
 
         {/* Encouragement */}
-        <footer role="contentinfo">
+        <footer role="contentinfo" aria-label="Loading encouragement message">
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

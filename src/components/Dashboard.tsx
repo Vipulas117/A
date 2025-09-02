@@ -43,13 +43,13 @@ export const Dashboard: React.FC<DashboardProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50" role="main" aria-label="ASman Learning Dashboard">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b border-gray-200" role="banner">
+      <header className="bg-white shadow-sm border-b border-gray-200" role="banner" aria-label="Main application header">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo and Title */}
-            <div className="flex items-center space-x-4">
+            <nav className="flex items-center space-x-4" role="navigation" aria-label="Main navigation">
               <button
                 onClick={onToggleHistory}
                 className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
@@ -68,7 +68,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
                 </h1>
                 <p className="text-sm text-gray-600">AI Teaching Assistant for Indian Classrooms</p>
               </div>
-            </div>
+            </nav>
 
             {/* New Chat Button */}
             <motion.button
@@ -86,9 +86,9 @@ export const Dashboard: React.FC<DashboardProps> = ({
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12" role="main">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Welcome Section */}
-        <section className="text-center mb-12" role="region" aria-labelledby="welcome-heading">
+        <section className="text-center mb-12" aria-labelledby="welcome-heading">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -110,8 +110,8 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </section>
 
         {/* Action Cards */}
-        <section className="grid md:grid-cols-3 gap-8 mb-12" role="region" aria-labelledby="actions-heading">
-          <h2 id="actions-heading" className="sr-only">Main Actions</h2>
+        <section className="grid md:grid-cols-3 gap-8 mb-12" aria-labelledby="actions-heading">
+          <h2 id="actions-heading" className="sr-only">Available Actions</h2>
           {actionCards.map((card, index) => (
             <motion.div
               key={card.title}
@@ -152,7 +152,7 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </section>
 
         {/* Quick Stats */}
-        <section role="region" aria-labelledby="stats-heading">
+        <aside role="complementary" aria-labelledby="stats-heading">
           <h2 id="stats-heading" className="sr-only">Platform Statistics</h2>
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -179,10 +179,10 @@ export const Dashboard: React.FC<DashboardProps> = ({
               </div>
             </div>
           </motion.div>
-        </section>
+        </aside>
 
         {/* Getting Started */}
-        <section className="mt-12 text-center" role="region" aria-labelledby="getting-started-heading">
+        <section className="mt-12 text-center" aria-labelledby="getting-started-heading">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -206,6 +206,23 @@ export const Dashboard: React.FC<DashboardProps> = ({
           </motion.div>
         </section>
       </main>
+      
+      {/* Footer */}
+      <footer role="contentinfo" aria-label="Application information" className="bg-white border-t border-gray-200 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="flex items-center justify-center space-x-2 mb-2">
+            <img 
+              src="/Logo.jpg" 
+              alt="ASman Learning Logo" 
+              className="w-6 h-6 rounded-full object-cover"
+            />
+            <span className="text-sm text-gray-600">ASman Learning v1.0</span>
+          </div>
+          <p className="text-xs text-gray-500">
+            AI Teaching Assistant for Indian Classrooms • Made with ❤️ for Teachers
+          </p>
+        </div>
+      </footer>
     </div>
   );
 };

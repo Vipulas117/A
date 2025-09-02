@@ -27,10 +27,10 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
   const classNumber = selectedClass.replace('class-', '');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
+        <nav className="flex items-center mb-8" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -42,7 +42,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
         </nav>
 
         {/* Title */}
-        <header className="text-center mb-12" role="banner">
+        <header className="text-center mb-12" role="banner" aria-label="Subject selection page header">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -61,7 +61,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
         </header>
 
         {/* Subject Grid */}
-        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" role="region" aria-labelledby="subject-grid-heading">
+        <main className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" aria-labelledby="subject-grid-heading">
           <h2 id="subject-grid-heading" className="sr-only">Available Subjects for Class {classNumber}</h2>
           {SUBJECTS.map((subject, index) => {
             const IconComponent = iconMap[subject.icon as keyof typeof iconMap];
@@ -101,7 +101,7 @@ export const SubjectSelection: React.FC<SubjectSelectionProps> = ({
               </motion.button>
             );
           })}
-        </section>
+        </main>
 
         {/* Helper Section */}
         <aside className="mt-12 text-center" role="complementary" aria-labelledby="did-you-know-heading">

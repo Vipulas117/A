@@ -59,10 +59,10 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
   }, []);
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4 ${className}`} role="main">
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4 ${className}`}>
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
+        <nav className="flex items-center mb-8" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -74,7 +74,7 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
         </nav>
 
         {/* Title */}
-        <header className="text-center mb-12" role="banner">
+        <header className="text-center mb-12" role="banner" aria-label="Upload page header">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -91,7 +91,7 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
         </header>
 
         {/* Upload Section */}
-        <section role="region" aria-labelledby="upload-section-heading">
+        <main aria-labelledby="upload-section-heading">
           <h2 id="upload-section-heading" className="sr-only">File Upload Area</h2>
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -152,10 +152,10 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
               </label>
             </div>
           </motion.div>
-        </section>
+        </main>
 
         {uploadedFiles.length > 0 && (
-          <section role="region" aria-labelledby="uploaded-files-heading">
+          <aside role="complementary" aria-labelledby="uploaded-files-heading">
             <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -192,7 +192,7 @@ export const UploadArea: React.FC<UploadAreaProps> = ({
                 ))}
               </div>
             </motion.div>
-          </section>
+          </aside>
         )}
 
         {/* Helper Information */}

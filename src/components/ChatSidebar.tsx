@@ -49,11 +49,9 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         className={`fixed top-0 left-0 h-full bg-white shadow-xl z-50 w-80 transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         } lg:relative lg:translate-x-0 lg:shadow-none lg:border-r lg:border-gray-200`}
-        role="navigation"
-        aria-label="Chat history and session navigation"
       >
         {/* Header */}
-        <header className="flex items-center justify-between p-4 border-b border-gray-200" role="banner">
+        <header className="flex items-center justify-between p-4 border-b border-gray-200" aria-label="Chat sidebar header">
           <div className="flex items-center space-x-3">
             <img 
               src="/Logo.jpg" 
@@ -75,15 +73,15 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         </header>
 
         {/* Sessions List */}
-        <main className="flex-1 overflow-y-auto p-4 space-y-3" role="main">
+        <main className="flex-1 overflow-y-auto p-4 space-y-3">
           {sessions.length === 0 ? (
-            <div className="text-center text-gray-500 py-8" role="status" aria-live="polite">
+            <div className="text-center text-gray-500 py-8" aria-live="polite">
               <History className="w-12 h-12 mx-auto mb-3 opacity-50" />
               <p>No chat history yet</p>
               <p className="text-sm">Start a new lesson to begin!</p>
             </div>
           ) : (
-            <nav role="navigation" aria-label="Chat sessions">
+            <nav aria-label="Chat sessions">
               {sessions.map((session) => (
                 <motion.button
                   key={session.id}
@@ -124,7 +122,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         </main>
 
         {/* Footer */}
-        <footer className="p-4 border-t border-gray-200" role="contentinfo">
+        <footer className="p-4 border-t border-gray-200" aria-label="Sidebar footer">
           <div className="text-center">
             <img 
               src="/Logo.jpg" 

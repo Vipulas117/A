@@ -147,10 +147,12 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
   const topRecommendation = recommendations[0];
 
   return (
-    <div className="space-y-4">
+    <section className="space-y-4" role="region" aria-labelledby="curriculum-selector-heading">
+      <h3 id="curriculum-selector-heading" className="sr-only">Curriculum Standard Selection</h3>
       {/* AI Recommendation Banner */}
       {showRecommendations && topRecommendation && selectedStandard?.id !== topRecommendation.standard.id && !isAnalyzing && (
-        <motion.div
+        <aside role="complementary" aria-labelledby="ai-recommendation-heading">
+          <motion.div
           initial={{ y: -10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="p-4 bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200 rounded-xl"
@@ -162,7 +164,7 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
               </div>
             </div>
             <div className="flex-1">
-              <h4 className="font-semibold text-blue-900 mb-1">
+              <h4 id="ai-recommendation-heading" className="font-semibold text-blue-900 mb-1">
                 🤖 AI Recommendation ({topRecommendation.confidence}% match)
               </h4>
               <p className="text-blue-800 mb-2">
@@ -187,12 +189,14 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
               </button>
             </div>
           </div>
-        </motion.div>
+          </motion.div>
+        </aside>
       )}
 
       {/* Loading State for Recommendations */}
       {isAnalyzing && showRecommendations && (
-        <motion.div
+        <div role="status" aria-live="polite">
+          <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="p-4 bg-gray-50 border border-gray-200 rounded-xl"
@@ -207,11 +211,13 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
               {language === 'hindi' ? 'AI सुझाव तैयार कर रहा है...' : 'AI analyzing best curriculum match...'}
             </span>
           </div>
-        </motion.div>
+          </motion.div>
+        </div>
       )}
 
       {/* Main Selector */}
-      <div className="relative">
+      <main className="relative" aria-labelledby="main-selector-heading">
+        <h4 id="main-selector-heading" className="sr-only">Curriculum Standard Selector</h4>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="w-full flex items-center justify-between p-4 bg-white border border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
@@ -356,10 +362,10 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </main>
 
       {/* Context Information */}
-      <div className="p-3 bg-gray-50 rounded-lg">
+      <footer className="p-3 bg-gray-50 rounded-lg" role="contentinfo" aria-label="Selection context information">
         <div className="flex items-center justify-between text-sm text-gray-600">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
@@ -392,16 +398,17 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
             </span>
           </div>
         </div>
-      </div>
+      </footer>
 
       {/* Top Recommendations Summary */}
       {showRecommendations && recommendations.length > 0 && !isAnalyzing && (
-        <motion.div
+        <aside role="complementary" aria-labelledby="top-recommendations-heading">
+          <motion.div
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           className="bg-blue-50 border border-blue-200 rounded-lg p-4"
         >
-          <h4 className="font-semibold text-blue-900 mb-3">
+          <h4 id="top-recommendations-heading" className="font-semibold text-blue-900 mb-3">
             {language === 'hindi' ? '🎯 शीर्ष सुझाव' : '🎯 Top Recommendations'}
           </h4>
           <div className="space-y-2">
@@ -423,8 +430,9 @@ export const CurriculumSelector: React.FC<CurriculumSelectorProps> = ({
               </div>
             ))}
           </div>
-        </motion.div>
+          </motion.div>
+        </aside>
       )}
-    </div>
+    </section>
   );
 };

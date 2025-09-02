@@ -46,17 +46,17 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
   const allStandards = [...INDIAN_CURRICULUM_STANDARDS, ...INTERNATIONAL_STANDARDS];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" role="dialog" aria-labelledby="curriculum-dashboard-heading" aria-modal="true">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6">
+        <header className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6" role="banner">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-2">Curriculum Alignment Dashboard</h2>
+              <h2 id="curriculum-dashboard-heading" className="text-2xl font-bold mb-2">Curriculum Alignment Dashboard</h2>
               <p className="text-blue-100">Analyze and improve content alignment with educational standards</p>
             </div>
             <button
@@ -66,11 +66,11 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
               ✕
             </button>
           </div>
-        </div>
+        </header>
 
         <div className="flex h-[calc(90vh-120px)]">
           {/* Sidebar - Standards Selection */}
-          <div className="w-80 bg-gray-50 border-r border-gray-200 overflow-y-auto">
+          <nav className="w-80 bg-gray-50 border-r border-gray-200 overflow-y-auto" role="navigation" aria-label="Curriculum standards selection">
             <div className="p-4">
               <h3 className="font-semibold text-gray-900 mb-4">Educational Standards</h3>
               
@@ -122,13 +122,14 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                 </div>
               </div>
             </div>
-          </div>
+          </nav>
 
           {/* Main Content */}
-          <div className="flex-1 overflow-y-auto">
+          <main className="flex-1 overflow-y-auto" aria-labelledby="dashboard-content-heading">
+            <h3 id="dashboard-content-heading" className="sr-only">Curriculum Analysis Content</h3>
             <div className="p-6">
               {/* Tabs */}
-              <div className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1">
+              <nav className="flex space-x-1 mb-6 bg-gray-100 rounded-lg p-1" role="tablist" aria-label="Analysis sections">
                 {[
                   { id: 'overview', label: 'Overview', icon: Target },
                   { id: 'gaps', label: 'Gap Analysis', icon: AlertCircle },
@@ -137,6 +138,9 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id as any)}
+                    role="tab"
+                    aria-selected={activeTab === tab.id}
+                    aria-controls={`${tab.id}-panel`}
                     className={`flex-1 flex items-center justify-center space-x-2 py-2 px-4 rounded-md transition-all ${
                       activeTab === tab.id
                         ? 'bg-white text-blue-600 shadow-sm'
@@ -147,10 +151,11 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                     <span className="font-medium">{tab.label}</span>
                   </button>
                 ))}
-              </div>
+              </nav>
 
               {/* Content based on active tab */}
-              {activeTab === 'overview' && (
+              <div role="tabpanel" id="overview-panel" aria-labelledby="overview-tab" hidden={activeTab !== 'overview'}>
+                {activeTab === 'overview' && (
                 <div className="space-y-6">
                   {/* Selected Standard Info */}
                   <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
@@ -211,9 +216,11 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                     </div>
                   )}
                 </div>
-              )}
+                )}
+              </div>
 
-              {activeTab === 'gaps' && alignmentData && (
+              <div role="tabpanel" id="gaps-panel" aria-labelledby="gaps-tab" hidden={activeTab !== 'gaps'}>
+                {activeTab === 'gaps' && alignmentData && (
                 <div className="space-y-6">
                   <div className="bg-red-50 border border-red-200 rounded-xl p-6">
                     <h3 className="text-lg font-bold text-red-900 mb-4">Critical Content Gaps</h3>
@@ -239,9 +246,11 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                     </div>
                   </div>
                 </div>
-              )}
+                )}
+              </div>
 
-              {activeTab === 'qa' && (
+              <div role="tabpanel" id="qa-panel" aria-labelledby="qa-tab" hidden={activeTab !== 'qa'}>
+                {activeTab === 'qa' && (
                 <div className="space-y-6">
                   {Object.entries(CURRICULUM_QA_CHECKLIST).map(([category, items]) => (
                     <div key={category} className="bg-white rounded-xl shadow-lg p-6">
@@ -263,9 +272,10 @@ export const CurriculumAlignmentDashboard: React.FC<CurriculumAlignmentDashboard
                     </div>
                   ))}
                 </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
+          </main>
         </div>
       </motion.div>
     </div>

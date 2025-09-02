@@ -103,17 +103,17 @@ export const CurriculumGapAnalysis: React.FC<CurriculumGapAnalysisProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" role="dialog" aria-labelledby="gap-analysis-heading" aria-modal="true">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6">
+        <header className="bg-gradient-to-r from-blue-600 to-sky-600 text-white p-6" role="banner">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold mb-2">Curriculum Gap Analysis</h2>
+              <h2 id="gap-analysis-heading" className="text-2xl font-bold mb-2">Curriculum Gap Analysis</h2>
               <p className="text-blue-100">
                 Analyzing alignment with {selectedStandard.name}
               </p>
@@ -125,11 +125,12 @@ export const CurriculumGapAnalysis: React.FC<CurriculumGapAnalysisProps> = ({
               ✕
             </button>
           </div>
-        </div>
+        </header>
 
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+        <main className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]" aria-labelledby="analysis-content-heading">
+          <h3 id="analysis-content-heading" className="sr-only">Gap Analysis Results</h3>
           {/* Filters */}
-          <div className="flex space-x-4 mb-6">
+          <nav className="flex space-x-4 mb-6" aria-label="Analysis filters">
             <select
               value={selectedSubject}
               onChange={(e) => setSelectedSubject(e.target.value)}
@@ -153,10 +154,10 @@ export const CurriculumGapAnalysis: React.FC<CurriculumGapAnalysisProps> = ({
                 <option key={grade} value={grade}>Class {grade}</option>
               ))}
             </select>
-          </div>
+          </nav>
 
           {isAnalyzing ? (
-            <div className="text-center py-12">
+            <div className="text-center py-12" role="status" aria-live="polite">
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
@@ -268,7 +269,7 @@ export const CurriculumGapAnalysis: React.FC<CurriculumGapAnalysisProps> = ({
               </div>
             </div>
           )}
-        </div>
+        </main>
       </motion.div>
     </div>
   );

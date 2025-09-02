@@ -1,374 +1,112 @@
-import React, { useState } from 'react';
-import { AnimatePresence } from 'framer-motion';
-import { ArrowLeft } from 'lucide-react';
-import { Dashboard } from './components/Dashboard';
-import { ChatSidebar } from './components/ChatSidebar';
-import { ClassSelection } from './components/ClassSelection';
-import { SubjectSelection } from './components/SubjectSelection';
-import { TopicInput } from './components/TopicInput';
-import { GlobalStyleSelector } from './components/GlobalStyleSelector';
-import { UploadArea } from './components/UploadArea';
-import { LessonPlayer } from './components/LessonPlayer';
-import { LoadingScreen } from './components/LoadingScreen';
-import { ErrorScreen } from './components/ErrorScreen';
-import { useChatSessions } from './hooks/useChatSessions';
-import { useFileUpload } from './hooks/useFileUpload';
-import { useGemini } from './hooks/useGemini';
-import { ClassLevel, Subject, GlobalStyle, LessonContent } from './types';
+import React from 'react';
+import { motion } from 'framer-motion';
+import { AlertCircle, RefreshCw, ArrowLeft } from 'lucide-react';
+import { ASmanCharacter } from './ASmanCharacter';
 
-type AppStep = 
-  | 'dashboard'
-  | 'class-selection'
-  | 'subject-selection'
-  | 'topic-input'
-  | 'style-selection'
-  | 'upload'
-  | 'lesson-player'
-  | 'loading'
-  | 'error';
-
-function App() {
-  const [currentStep, setCurrentStep] = useState<AppStep>('dashboard');
-  const [selectedClass, setSelectedClass] = useState<ClassLevel | null>(null);
-  const [selectedSubject, setSelectedSubject] = useState<Subject | null>(null);
-  const [selectedTopic, setSelectedTopic] = useState<string>('');
-  const [selectedStyle, setSelectedStyle] = useState<GlobalStyle>('american');
-  const [currentLesson, setCurrentLesson] = useState<LessonContent | null>(null);
-
-  const {
-    sessions,
-    currentSession,
-    isHistoryOpen,
-    createNewSession,
-    updateSession,
-    selectSession,
-    generateSessionTitle,
-    toggleHistory
-  } = useChatSessions();
-
-  const { generateLesson, isLoading, error, clearError } = useGemini();
-
-  const { handleFileUpload } = useFileUpload();
-
-  // Navigation handlers
-  const handleNewChat = () => {
-    createNewSession();
-    setCurrentStep('class-selection');
-    setSelectedClass(null);
-    setSelectedSubject(null);
-    setSelectedTopic('');
-    setCurrentLesson(null);
-    clearError();
-  };
-
-  const handleSelectClass = (classLevel: ClassLevel) => {
-    setSelectedClass(classLevel);
-    setCurrentStep('subject-selection');
-    
-    if (currentSession) {
-      updateSession(currentSession.id, { classLevel });
-    }
-  };
-
-  const handleSelectSubject = (subject: Subject) => {
-    setSelectedSubject(subject);
-    setCurrentStep('topic-input');
-    
-    if (currentSession) {
-      updateSession(currentSession.id, { subject });
-    }
-  };
-
-  const handleSubmitTopic = (topic: string) => {
-    setSelectedTopic(topic);
-    setCurrentStep('style-selection');
-    
-    if (currentSession) {
-      const title = generateSessionTitle(selectedClass || undefined, selectedSubject, topic);
-      updateSession(currentSession.id, { 
-        topic,
-        title
-      });
-    }
-  };
-
-  const handleStyleSelection = async (style: GlobalStyle) => {
-    setSelectedStyle(style);
-    
-    if (selectedClass && selectedSubject && selectedTopic) {
-      setCurrentStep('loading');
-      
-      try {
-        const lesson = await generateLesson(selectedClass, selectedSubject, selectedTopic, style);
-        
-        if (lesson) {
-          setCurrentLesson(lesson);
-          setCurrentStep('lesson-player');
-          
-          if (currentSession) {
-            updateSession(currentSession.id, {
-              lessonContent: lesson,
-              globalStyle: style
-            });
-          }
-        } else {
-          setCurrentStep('error');
-        }
-      } catch (err) {
-        setCurrentStep('error');
-      }
-    }
-  };
-
-  const handleSelectSession = (sessionId: string) => {
-    const session = sessions.find(s => s.id === sessionId);
-    if (session) {
-      selectSession(sessionId);
-      
-      if (session.lessonContent) {
-        setSelectedClass(session.classLevel as ClassLevel);
-        setSelectedSubject(session.subject as Subject);
-        setSelectedTopic(session.topic || '');
-        setSelectedStyle(session.globalStyle || 'american');
-        setCurrentLesson(session.lessonContent);
-        setCurrentStep('lesson-player');
-      } else {
-        setCurrentStep('dashboard');
-      }
-    }
-  };
-
-  const handleBack = () => {
-    switch (currentStep) {
-      case 'class-selection':
-        setCurrentStep('dashboard');
-        break;
-      case 'subject-selection':
-        setCurrentStep('class-selection');
-        break;
-      case 'topic-input':
-        setCurrentStep('subject-selection');
-        break;
-      case 'style-selection':
-        setCurrentStep('topic-input');
-        break;
-      case 'lesson-player':
-        setCurrentStep('dashboard');
-        break;
-      case 'upload':
-        setCurrentStep('dashboard');
-        break;
-      case 'error':
-        setCurrentStep('dashboard');
-        break;
-      default:
-        setCurrentStep('dashboard');
-    }
-  };
-
-  const handleRetry = () => {
-    if (selectedClass && selectedSubject && selectedTopic) {
-      handleStyleSelection(selectedStyle);
-    } else {
-      setCurrentStep('dashboard');
-    }
-  };
-
-  const handleStyleChange = async (newStyle: GlobalStyle) => {
-    if (selectedClass && selectedSubject && selectedTopic) {
-      setSelectedStyle(newStyle);
-      setCurrentStep('loading');
-      
-      try {
-        const lesson = await generateLesson(selectedClass, selectedSubject, selectedTopic, newStyle, currentLesson?.isGlobalVersion);
-        
-        if (lesson) {
-          setCurrentLesson(lesson);
-          setCurrentStep('lesson-player');
-          
-          if (currentSession) {
-            updateSession(currentSession.id, {
-              lessonContent: lesson,
-              globalStyle: newStyle
-            });
-          }
-        }
-      } catch (err) {
-        setCurrentStep('error');
-      }
-    }
-  };
-
-  const handleRequestGlobalVersion = async () => {
-    if (selectedClass && selectedSubject && selectedTopic) {
-      setCurrentStep('loading');
-      
-      try {
-        const globalLesson = await generateLesson(selectedClass, selectedSubject, selectedTopic, selectedStyle, true);
-        
-        if (globalLesson) {
-          const enhancedLesson = { ...globalLesson, isGlobalVersion: true };
-          setCurrentLesson(enhancedLesson);
-          setCurrentStep('lesson-player');
-          
-          if (currentSession) {
-            updateSession(currentSession.id, {
-              lessonContent: enhancedLesson,
-              hasGlobalVersion: true
-            });
-          }
-        } else {
-          setCurrentStep('error');
-        }
-      } catch (err) {
-        setCurrentStep('error');
-      }
-    }
-  };
-
-  const handleUploadAnalyze = (files: any[]) => {
-    // Show detailed analysis results
-    const analysisCount = files.filter(f => f.analysis).length;
-    if (analysisCount > 0) {
-      alert(`🎉 ASman has successfully analyzed ${analysisCount} file(s)!\n\nThe AI found excellent educational content that can be used to create engaging lessons for your students. You can now use these insights to develop targeted activities and assessments.`);
-    } else {
-      alert(`📁 Files uploaded successfully!\n\nASman has processed ${files.length} file(s). You can now create lessons incorporating this content.`);
-    }
-    
-    // Store analysis results in session if needed
-    if (currentSession && analysisCount > 0) {
-      updateSession(currentSession.id, {
-        uploadedContent: files.map(f => ({
-          name: f.name,
-          type: f.type,
-          analysis: f.analysis
-        }))
-      });
-    }
-    
-    setCurrentStep('dashboard');
-  };
-
-  return (
-    <div className="flex h-screen overflow-hidden" role="application" aria-label="ASman Learning - AI Teaching Assistant">
-      {/* Chat Sidebar */}
-      <aside role="complementary" aria-label="Chat History and Session Management">
-        <ChatSidebar
-          isOpen={isHistoryOpen}
-          sessions={sessions}
-          currentSessionId={currentSession?.id}
-          onToggle={toggleHistory}
-          onSelectSession={handleSelectSession}
-        />
-      </aside>
-
-      {/* Main Content */}
-      <main role="main" className="flex-1 overflow-auto" aria-label="Main Application Content">
-        <AnimatePresence mode="wait">
-          {currentStep === 'dashboard' && (
-            <Dashboard
-              onNewChat={handleNewChat}
-              onSelectClassSubject={() => setCurrentStep('class-selection')}
-              onUploadContent={() => setCurrentStep('upload')}
-              onGlobalInspiration={() => alert('Global Inspiration coming soon!')}
-              onToggleHistory={toggleHistory}
-            />
-          )}
-
-          {currentStep === 'class-selection' && (
-            <ClassSelection
-              onSelectClass={handleSelectClass}
-              onBack={handleBack}
-            />
-          )}
-
-          {currentStep === 'subject-selection' && selectedClass && (
-            <SubjectSelection
-              selectedClass={selectedClass}
-              onSelectSubject={handleSelectSubject}
-              onBack={handleBack}
-            />
-          )}
-
-          {currentStep === 'topic-input' && selectedClass && selectedSubject && (
-            <TopicInput
-              selectedClass={selectedClass}
-              selectedSubject={selectedSubject}
-              onSubmitTopic={handleSubmitTopic}
-              onBack={handleBack}
-            />
-          )}
-
-          {currentStep === 'style-selection' && (
-            <section className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="region" aria-labelledby="style-selection-heading">
-              <div className="max-w-4xl mx-auto">
-                <div className="flex items-center mb-8">
-                  <button
-                    onClick={handleBack}
-                    className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-                    aria-label="Go back to topic input"
-                  >
-                    <ArrowLeft className="w-5 h-5" />
-                    <span>Back</span>
-                  </button>
-                </div>
-                
-                <div className="text-center mb-12">
-                  <h2 id="style-selection-heading" className="text-4xl font-bold text-gray-900 mb-4">
-                    Choose Teaching Style
-                  </h2>
-                  <p className="text-xl text-gray-600">
-                    Select a global teaching methodology to shape your lesson approach.
-                  </p>
-                </div>
-                
-                <GlobalStyleSelector
-                  selectedStyle={selectedStyle}
-                  onSelectStyle={handleStyleSelection}
-                />
-              </div>
-            </section>
-          )}
-
-          {currentStep === 'upload' && (
-            <UploadArea
-              onBack={handleBack}
-              onFileUpload={handleFileUpload}
-              selectedClass={selectedClass}
-              selectedSubject={selectedSubject}
-            />
-          )}
-
-          {currentStep === 'loading' && (
-            <LoadingScreen 
-              isGlobalVersion={currentLesson?.isGlobalVersion}
-            />
-          )}
-
-          {currentStep === 'error' && (
-            <ErrorScreen
-              error={error || 'An unexpected error occurred'}
-              onRetry={handleRetry}
-              onBack={handleBack}
-            />
-          )}
-
-          {currentStep === 'lesson-player' && currentLesson && selectedClass && selectedSubject && selectedTopic && (
-            <LessonPlayer
-              lessonContent={currentLesson}
-              classLevel={selectedClass}
-              subject={selectedSubject}
-              topic={selectedTopic}
-              globalStyle={selectedStyle}
-              onBack={handleBack}
-              onStyleChange={handleStyleChange}
-              onRequestGlobalVersion={handleRequestGlobalVersion}
-            />
-          )}
-        </AnimatePresence>
-      </main>
-    </div>
-  );
+interface ErrorScreenProps {
+  error: string;
+  onRetry?: () => void;
+  onBack?: () => void;
 }
 
-export default App;
+export const ErrorScreen: React.FC<ErrorScreenProps> = ({
+  error,
+  onRetry,
+  onBack
+}) => {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-orange-50 flex items-center justify-center p-4" role="main">
+      <div className="text-center max-w-md mx-auto">
+        {/* ASman Character - sad state */}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          className="mb-8"
+          aria-hidden="true"
+        >
+          <div className="relative">
+            <ASmanCharacter size="large" animate={false} />
+            <motion.div
+              className="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center"
+              animate={{ scale: [1, 1.1, 1] }}
+              transition={{ duration: 1, repeat: Infinity }}
+            >
+              <AlertCircle className="w-4 h-4 text-white" />
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Error Message */}
+        <header role="banner">
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-8"
+          >
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              Oops! Something went wrong
+            </h1>
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-6" role="alert" aria-live="assertive">
+              <p className="text-red-700">{error}</p>
+            </div>
+            <p className="text-gray-600">
+              Don't worry! ASman is here to help. You can try again or go back to the previous step.
+            </p>
+          </motion.div>
+        </header>
+
+        {/* Action Buttons */}
+        <section role="region" aria-labelledby="error-actions-heading">
+          <h2 id="error-actions-heading" className="sr-only">Error Recovery Actions</h2>
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="space-y-4"
+          >
+            {onRetry && (
+              <motion.button
+                onClick={onRetry}
+                className="w-full flex items-center justify-center space-x-3 bg-gradient-to-r from-blue-600 to-sky-600 text-white py-3 rounded-xl font-medium hover:shadow-lg transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Retry the failed operation"
+              >
+                <RefreshCw className="w-5 h-5" aria-hidden="true" />
+                <span>Try Again</span>
+              </motion.button>
+            )}
+
+            {onBack && (
+              <motion.button
+                onClick={onBack}
+                className="w-full flex items-center justify-center space-x-3 bg-gray-100 text-gray-700 py-3 rounded-xl font-medium hover:bg-gray-200 transition-all"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                aria-label="Go back to previous step"
+              >
+                <ArrowLeft className="w-5 h-5" aria-hidden="true" />
+                <span>Go Back</span>
+              </motion.button>
+            )}
+          </motion.div>
+        </section>
+
+        {/* Help Text */}
+        <aside role="complementary" aria-labelledby="help-heading">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.6 }}
+            className="mt-8"
+          >
+            <div className="bg-blue-100 rounded-xl p-4">
+              <h4 id="help-heading" className="font-semibold text-blue-900 mb-2">
+                💡 Need Help?
+              </h4>
+      </div>
+    </div>
+  );
+};

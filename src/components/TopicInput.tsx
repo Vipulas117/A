@@ -46,10 +46,10 @@ export const TopicInput: React.FC<TopicInputProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4" role="main">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-sky-50 p-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
-        <nav className="flex items-center mb-8" role="navigation" aria-label="Breadcrumb navigation">
+        <nav className="flex items-center mb-8" aria-label="Breadcrumb navigation">
           <button
             onClick={onBack}
             className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
@@ -61,7 +61,7 @@ export const TopicInput: React.FC<TopicInputProps> = ({
         </nav>
 
         {/* Selected Context */}
-        <header className="text-center mb-12" role="banner">
+        <header className="text-center mb-12" role="banner" aria-label="Topic input page header">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -87,7 +87,7 @@ export const TopicInput: React.FC<TopicInputProps> = ({
         </header>
 
         {/* Topic Input Form */}
-        <section role="region" aria-labelledby="topic-input-heading">
+        <main aria-labelledby="topic-input-heading">
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
@@ -130,7 +130,7 @@ export const TopicInput: React.FC<TopicInputProps> = ({
               </motion.button>
             </form>
           </motion.div>
-        </section>
+        </main>
 
         {/* Suggestions */}
         {suggestions.length > 0 && (
