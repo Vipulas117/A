@@ -1,17 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Dashboard from './components/Dashboard';
-import ClassSelection from './components/ClassSelection';
-import SubjectSelection from './components/SubjectSelection';
-import TopicInput from './components/TopicInput';
-import GlobalStyleSelector from './components/GlobalStyleSelector';
-import UploadArea from './components/UploadArea';
-import LessonPlayer from './components/LessonPlayer';
-import LoadingScreen from './components/LoadingScreen';
-import ErrorScreen from './components/ErrorScreen';
+import { Dashboard } from './components/Dashboard';
+import { ClassSelection } from './components/ClassSelection';
+import { SubjectSelection } from './components/SubjectSelection';
+import { TopicInput } from './components/TopicInput';
+import { GlobalStyleSelector } from './components/GlobalStyleSelector';
+import { UploadArea } from './components/UploadArea';
+import { LessonPlayer } from './components/LessonPlayer';
+import { LoadingScreen } from './components/LoadingScreen';
+import { ErrorScreen } from './components/ErrorScreen';
 import { ChatSidebar } from './components/ChatSidebar';
-import CurriculumAlignmentDashboard from './components/CurriculumAlignmentDashboard';
+import { CurriculumAlignmentDashboard } from './components/CurriculumAlignmentDashboard';
 import { useChatSessions } from './hooks/useChatSessions';
 import { useGemini } from './hooks/useGemini';
 
