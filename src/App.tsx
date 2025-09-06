@@ -10,7 +10,7 @@ import UploadArea from './components/UploadArea';
 import LessonPlayer from './components/LessonPlayer';
 import LoadingScreen from './components/LoadingScreen';
 import ErrorScreen from './components/ErrorScreen';
-import ChatSidebar from './components/ChatSidebar';
+import { ChatSidebar } from './components/ChatSidebar';
 import CurriculumAlignmentDashboard from './components/CurriculumAlignmentDashboard';
 import { useChatSessions } from './hooks/useChatSessions';
 import { useGemini } from './hooks/useGemini';
